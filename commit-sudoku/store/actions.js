@@ -12,9 +12,12 @@ export function fetchBoard(level) {
     fetch(`${boardUrl}board?difficulty=${level}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
       dispatch({
         type: 'SET_BOARD',
+        payload: data.board
+      })
+      dispatch({
+        type: 'SET_COPY_BOARD',
         payload: data.board
       })
     })

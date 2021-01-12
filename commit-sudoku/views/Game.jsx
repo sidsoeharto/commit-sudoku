@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 export default function Game ({ navigation: {navigate}, route }) {
   const { username, level } = route.params
   const board = useSelector(state => state.boardReducer.board)
+  const copyBoard = useSelector(state => state.boardReducer.copyBoard)
+
   const dispatch = useDispatch()
 
   React.useEffect(() => {
@@ -58,6 +60,8 @@ export default function Game ({ navigation: {navigate}, route }) {
       .catch(console.log)
   }
 
+  console.log(copyBoard)
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>{ `Name: ${username}` }</Text>
@@ -69,15 +73,29 @@ export default function Game ({ navigation: {navigate}, route }) {
               <View style={styles.column} key={indexRow}>
                 {
                   rowArray.map((colCell, indexCol) => {
-                    return (
-                      <TextInput
-                        style={ fancyStyle(board, indexRow, indexCol) }
-                        onChangeText={ (text) => onChangeText(text, indexRow, indexCol) }
-                        value={String(colCell)}
-                        keyboardType = 'number-pad'
-                        key={indexCol}
-                      ></TextInput>
-                    )
+                    if (colCell == copyBoard[indexRow][indexCol] && colCell !== 0) {
+                      return (
+                        <TextInput
+                          style={ fancyStyle(board, indexRow, indexCol) }
+                          onChangeText={ (text) => onChangeText(text, indexRow, indexCol) }
+                          value={String(colCell)}
+                          keyboardType = 'number-pad'
+                          editable={false}
+                          key={indexCol}
+                        ></TextInput>
+                      )
+                    } else {
+                      return (
+                        <TextInput
+                          style={ fancyStyle(board, indexRow, indexCol) }
+                          onChangeText={ (text) => onChangeText(text, indexRow, indexCol) }
+                          value={String(colCell)}
+                          keyboardType = 'number-pad'
+                          editable={true}
+                          key={indexCol}
+                        ></TextInput>
+                      )
+                    }
                   })
                 }
               </View>
