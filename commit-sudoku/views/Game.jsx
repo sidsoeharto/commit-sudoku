@@ -19,12 +19,43 @@ export default function Game ({ navigation: {navigate}, route }) {
     dispatch(updateBoard(text, indexRow, indexCol))
   }
 
+  const encodeBoard = (board) => board.reduce((result, row, i) => result + `%5B${encodeURIComponent(row)}%5D${i === board.length -1 ? '' : '%2C'}`, '')
+
+  const encodeParams = (params) => 
+    Object.keys(params)
+    .map(key => key + '=' + `%5B${encodeBoard(params[key])}%5D`)
+    .join('&');
+
+
   function validate () {
-    
+    fetch('https://sugoku.herokuapp.com/validate', {
+      method: "POST",
+      body: encodeParams({board: board}),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+        result.status === 'solved' ? navigate('Finish', { username }) : alert('Your sudoku cannot be commited')
+      })
+      .catch(console.log)
   }
 
   function solve () {
-    
+    fetch('https://sugoku.herokuapp.com/solve', {
+      method: "POST",
+      body: encodeParams({board: board}),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch({
+          type: 'SET_BOARD',
+          payload: data.solution
+        })
+        alert('Sudoku has been solved by solver')
+      })
+      .catch(console.log)
   }
 
   return (
