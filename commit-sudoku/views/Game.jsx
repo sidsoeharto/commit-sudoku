@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Button, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { fetchBoard, updateBoard } from '../store/actions'
 
@@ -15,7 +15,7 @@ export default function Game ({ navigation: {navigate}, route }) {
 
   React.useEffect(() => {
     dispatch(fetchBoard(level))
-  }, [])
+  }, [dispatch])
 
   function onChangeText(text, indexRow, indexCol) {
     dispatch(updateBoard(text, indexRow, indexCol))
@@ -37,8 +37,7 @@ export default function Game ({ navigation: {navigate}, route }) {
     })
       .then(response => response.json())
       .then(result => {
-        console.log(result)
-        result.status === 'solved' ? navigate('Finish', { username }) : alert('Your sudoku cannot be commited')
+        result.status === 'solved' ? navigate('Finish', { username }) : Alert.alert("Your sudoku cannot be commited", "Please solve your sudoku correctly", { text: "OK", onPress: () => console.log("OK Pressed") })
       })
       .catch(console.log)
   }
@@ -60,8 +59,6 @@ export default function Game ({ navigation: {navigate}, route }) {
       .catch(console.log)
   }
 
-  console.log(copyBoard)
-
   return (
     <SafeAreaView style={styles.container}>
       <Text>{ `Name: ${username}` }</Text>
@@ -77,7 +74,6 @@ export default function Game ({ navigation: {navigate}, route }) {
                       return (
                         <TextInput
                           style={ fancyStyle(board, indexRow, indexCol) }
-                          onChangeText={ (text) => onChangeText(text, indexRow, indexCol) }
                           value={String(colCell)}
                           keyboardType = 'number-pad'
                           editable={false}
@@ -89,7 +85,7 @@ export default function Game ({ navigation: {navigate}, route }) {
                         <TextInput
                           style={ fancyStyle(board, indexRow, indexCol) }
                           onChangeText={ (text) => onChangeText(text, indexRow, indexCol) }
-                          value={String(colCell)}
+                          value={colCell === 0 ? "" : String(colCell)}
                           keyboardType = 'number-pad'
                           editable={true}
                           key={indexCol}
@@ -159,7 +155,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    backgroundColor: '#bdc0bb'
   },
   column: {
     flexDirection: 'row'

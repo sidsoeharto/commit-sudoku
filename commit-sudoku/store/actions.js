@@ -13,20 +13,21 @@ export function fetchBoard(level) {
     .then(response => response.json())
     .then(data => {
       dispatch({
-        type: 'SET_BOARD',
-        payload: data.board
-      })
-      dispatch({
         type: 'SET_COPY_BOARD',
         payload: data.board
       })
+      dispatch({
+        type: 'SET_BOARD',
+        payload: data.board
+      })
+      const { board } = getState()
+      console.log(board)
     })
     .catch(err => console.log(err))
   }
 }
 
 export function updateBoard(text, indexRow, indexCol) {
-  console.log(text, indexRow, indexCol)
   return {
     type: 'UPDATE_BOARD',
     payload: {

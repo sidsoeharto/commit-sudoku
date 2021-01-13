@@ -13,6 +13,7 @@ export default function Finish ({ navigation: { navigate }, route }) {
       <View>
         <Button
           title="Play Again"
+          color='#7c9473'
           onPress={() => navigate('Home')}
         ></Button>
       </View>
