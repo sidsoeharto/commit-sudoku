@@ -24,17 +24,18 @@ export default function Home ({ navigation }) {
         style={styles.image}
         source={require('../assets/sudoku-logo.png')}
       ></Image>
-      <Text>Welcome to Commit Sudoku</Text>
-      <Text>What is your name?</Text>
+      <Text style={styles.title}>Welcome to Commit Sudoku</Text>
+      <Text style={styles.subtitle}>What is your name?</Text>
       <TextInput
         onChangeText={ (text) => setUsername(text) }
         value={ username }
         placeholder="Insert your name"
+        style={styles.input}
       ></TextInput>
       <View style={styles.buttons}>
-        <Button color='#7c9473' onPress={() => onPress('easy')} title="Easy"></Button>
-        <Button color='#7c9473' onPress={() => onPress('medium')} title="Medium"></Button>
-        <Button color='#7c9473' onPress={() => onPress('hard')} title="Hard"></Button>
+        <Button color='blue' onPress={() => onPress('easy')} title="Easy"></Button>
+        <Button color='orange' onPress={() => onPress('medium')} title="Medium"></Button>
+        <Button color='red' onPress={() => onPress('hard')} title="Hard"></Button>
       </View>
       <AwesomeAlert
         show={alert}
@@ -50,6 +51,9 @@ export default function Home ({ navigation }) {
         onConfirmPressed={() => {
           setAlert(false);
         }}
+        onDismiss={() => {
+          setAlert(false);
+        }}
       />
     </SafeAreaView>
   )
@@ -59,15 +63,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     backgroundColor: '#8db596'
   },
   buttons: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 75
   },
   image: {
     width: 150,
     height: 150
+  },
+  title: {
+    fontSize: 21,
+    fontWeight: "bold",
+    color: 'white'
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "200",
+    color: 'white'
+  },
+  input: {
+    height: 50,
+    width: 200,
+    padding: 15,
+    backgroundColor: '#e8eae6',
+    borderRadius: 10
   }
 })

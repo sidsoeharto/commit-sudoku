@@ -68,8 +68,8 @@ export default function Game ({ navigation: {navigate}, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>{ `Name: ${username}` }</Text>
-      <Text>{ `Level: ${level}` }</Text>
+      <Text style={styles.username}>{ `Name: ${username}` }</Text>
+      <Text style={styles.level}>{ `Level: ${level}` }</Text>
       <CountDown
         until={240}
         size={20}
@@ -78,7 +78,7 @@ export default function Game ({ navigation: {navigate}, route }) {
           alert("Time Up"), navigate("Home");
         }}
         timeToShow={["M", "S"]}
-        timeLabels={{ m: "MM", s: "SS" }}
+        timeLabels={{ m: "min", s: "sec" }}
       />
       <View style={{ padding: 8 }}>
         {
@@ -134,6 +134,9 @@ export default function Game ({ navigation: {navigate}, route }) {
         confirmText="OK"
         confirmButtonColor="#DD6B55"
         onConfirmPressed={() => {
+          setAlert(false);
+        }}
+        onDismiss={() => {
           setAlert(false);
         }}
       />
@@ -192,14 +195,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     backgroundColor: '#8db596'
   },
+  username: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: 'white',
+    marginBottom: 20
+  },
+  level: {
+    fontSize: 18,
+    fontWeight: "200",
+    color: 'white',
+    marginBottom: 20
+  },
   column: {
     flexDirection: 'row'
   },
   buttons: {
     flexDirection: 'column',
-    justifyContent: 'space-between'
-  },
-  button: {
-    marginRight: 5,
+    justifyContent: 'space-between',
+    marginBottom: 25
   }
 })
