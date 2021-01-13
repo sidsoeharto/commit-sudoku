@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    backgroundColor: '#8db596'
   },
   image: {
     height: 300,

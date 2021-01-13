@@ -1,15 +1,19 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Button, TextInput, StyleSheet, Dimensions, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { fetchBoard, updateBoard } from '../store/actions'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CountDown from "react-native-countdown-component";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
+import { fetchBoard, updateBoard } from '../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function Game ({ navigation: {navigate}, route }) {
   const { username, level } = route.params
   const board = useSelector(state => state.boardReducer.board)
   const copyBoard = useSelector(state => state.boardReducer.copyBoard)
+  const [status, setStatus] = React.useState("");
+  const [alert, setAlert] = React.useState(false);
 
   const dispatch = useDispatch()
 
@@ -37,7 +41,8 @@ export default function Game ({ navigation: {navigate}, route }) {
     })
       .then(response => response.json())
       .then(result => {
-        result.status === 'solved' ? navigate('Finish', { username }) : Alert.alert("Your sudoku cannot be commited", "Please solve your sudoku correctly", { text: "OK", onPress: () => console.log("OK Pressed") })
+        setStatus(result.status)
+        result.status === 'solved' ? navigate('Finish', { username }) : setAlert(true)
       })
       .catch(console.log)
   }
@@ -59,10 +64,22 @@ export default function Game ({ navigation: {navigate}, route }) {
       .catch(console.log)
   }
 
+  let isRunning = status === "solved" ? false : true
+
   return (
     <SafeAreaView style={styles.container}>
       <Text>{ `Name: ${username}` }</Text>
       <Text>{ `Level: ${level}` }</Text>
+      <CountDown
+        until={240}
+        size={20}
+        running={isRunning}
+        onFinish={() => {
+          alert("Time Up"), navigate("Home");
+        }}
+        timeToShow={["M", "S"]}
+        timeLabels={{ m: "MM", s: "SS" }}
+      />
       <View style={{ padding: 8 }}>
         {
           board.map((rowArray, indexRow) => {
@@ -101,8 +118,25 @@ export default function Game ({ navigation: {navigate}, route }) {
       </View>
       <View style={styles.buttons}>
         <Button style={styles.button} color='#7c9473' onPress={validate} title="Validate"></Button>
+      </View>
+      <View style={styles.buttons}>
         <Button style={styles.button} color='#7c9473' onPress={() => {solve(board)}} title="Solve"></Button>
       </View>
+      <AwesomeAlert
+        show={alert}
+        showProgress={false}
+        title="Cannot Commit Sudoku"
+        message="You need to solve your sudoku board"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="OK"
+        confirmButtonColor="#DD6B55"
+        onConfirmPressed={() => {
+          setAlert(false);
+        }}
+      />
     </SafeAreaView>
   )
 }
@@ -156,13 +190,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor: '#bdc0bb'
+    backgroundColor: '#8db596'
   },
   column: {
     flexDirection: 'row'
   },
   buttons: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between'
   },
   button: {
