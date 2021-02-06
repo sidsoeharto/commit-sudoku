@@ -1,1 +1,1 @@
-# sugoku
+# commit-sudoku by sidsoeharto
